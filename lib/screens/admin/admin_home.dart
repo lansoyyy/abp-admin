@@ -5,11 +5,14 @@ import 'package:app/screens/admin/tabs/payments_tab.dart';
 import 'package:app/screens/admin/tabs/profile_tab.dart';
 import 'package:app/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../../widgets/text_widget.dart';
 
 class AdminHome extends StatelessWidget {
-  const AdminHome({super.key});
+  final box = GetStorage();
+
+  AdminHome({super.key});
 
   @override
   Widget build(BuildContext context) {

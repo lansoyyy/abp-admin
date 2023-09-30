@@ -1,5 +1,4 @@
 import 'package:app/screens/admin/admin_home.dart';
-import 'package:app/screens/home_screen.dart';
 import 'package:app/widgets/text_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -206,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await FirebaseAuth.instance.signInWithCredential(credential);
 
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const AdminHome()));
+          MaterialPageRoute(builder: (context) => AdminHome()));
     } on FirebaseAuthException catch (e) {
       print(e);
     }

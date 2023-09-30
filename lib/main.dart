@@ -1,5 +1,4 @@
 import 'package:app/screens/admin/admin_home.dart';
-import 'package:app/screens/home_screen.dart';
 import 'package:app/screens/landing_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,9 +27,9 @@ class MyApp extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return const AdminHome();
+              return AdminHome();
             } else {
-              return const LandingScreen();
+              return LandingScreen();
             }
           }),
     );

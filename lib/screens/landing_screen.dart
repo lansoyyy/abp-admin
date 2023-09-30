@@ -2,11 +2,14 @@ import 'package:app/screens/auth/login_screen.dart';
 import 'package:app/utils/colors.dart';
 import 'package:app/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../widgets/text_widget.dart';
 
 class LandingScreen extends StatelessWidget {
-  const LandingScreen({super.key});
+  final box = GetStorage();
+
+  LandingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +55,7 @@ class LandingScreen extends StatelessWidget {
               radius: 100,
               label: 'Senior Coordinator',
               onPressed: () {
+                box.write('type', 'Senior Coordinator');
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const LoginScreen(
                           type: 'Senior Coordinator',
@@ -66,6 +70,7 @@ class LandingScreen extends StatelessWidget {
               radius: 100,
               label: 'District Coordinator',
               onPressed: () {
+                box.write('type', 'District Coordinator');
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const LoginScreen(
                           type: 'District Coordinator',
@@ -80,6 +85,7 @@ class LandingScreen extends StatelessWidget {
               radius: 100,
               label: 'MWG',
               onPressed: () {
+                box.write('type', 'MWG');
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const LoginScreen(
                           type: 'MWG',

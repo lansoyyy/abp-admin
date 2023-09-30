@@ -109,8 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               await FirebaseAuth.instance.signOut();
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const LandingScreen()));
+                                      builder: (context) => LandingScreen()));
                             },
                             child: const Text(
                               'Continue',
