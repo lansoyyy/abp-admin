@@ -1,5 +1,6 @@
-import 'package:app/screens/auth/login_screen.dart';
+import 'package:app/screens/admin/admin_home.dart';
 import 'package:app/screens/home_screen.dart';
+import 'package:app/screens/landing_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +28,9 @@ class MyApp extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return HomeScreen();
+              return const AdminHome();
             } else {
-              return const LoginScreen();
+              return const LandingScreen();
             }
           }),
     );

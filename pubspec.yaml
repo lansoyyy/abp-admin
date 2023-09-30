@@ -50,6 +50,7 @@ dependencies:
   file_picker:
   path_provider:
   image_picker:
+  google_sign_in:
 
 dev_dependencies:
   flutter_test:

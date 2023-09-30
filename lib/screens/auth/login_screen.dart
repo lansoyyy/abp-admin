@@ -1,18 +1,17 @@
-import 'dart:async';
-
 import 'package:app/screens/admin/admin_home.dart';
-import 'package:app/screens/auth/signup_screen.dart';
 import 'package:app/screens/home_screen.dart';
-import 'package:app/widgets/button_widget.dart';
 import 'package:app/widgets/text_widget.dart';
-import 'package:app/widgets/textfield_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../widgets/toast_widget.dart';
+import '../../utils/colors.dart';
+import '../../widgets/button_widget.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String type;
+
+  const LoginScreen({super.key, required this.type});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -72,152 +71,60 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 30,
               ),
-              TextFieldWidget(label: 'Email', controller: usernameController),
-              const SizedBox(
-                height: 20,
-              ),
-              Column(
-                children: [
-                  TextFieldWidget(
-                      isPassword: true,
-                      isObscure: true,
-                      label: 'Password',
-                      controller: passwordController),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 50),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: TextButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: ((context) {
-                              final formKey = GlobalKey<FormState>();
-                              final TextEditingController emailController =
-                                  TextEditingController();
-
-                              return AlertDialog(
-                                backgroundColor: Colors.grey[100],
-                                title: TextRegular(
-                                  text: 'Forgot Password',
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
-                                content: Form(
-                                  key: formKey,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      TextFieldWidget(
-                                        hint: 'Email',
-                                        inputType: TextInputType.emailAddress,
-                                        label: 'Email',
-                                        controller: emailController,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: (() {
-                                      Navigator.pop(context);
-                                    }),
-                                    child: TextRegular(
-                                      text: 'Cancel',
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: (() async {
-                                      try {
-                                        Navigator.pop(context);
-                                        await FirebaseAuth.instance
-                                            .sendPasswordResetEmail(
-                                                email: emailController.text);
-                                        showToast(
-                                            'Password reset link sent to ${emailController.text}');
-                                      } catch (e) {
-                                        String errorMessage = '';
-
-                                        if (e is FirebaseException) {
-                                          switch (e.code) {
-                                            case 'invalid-email':
-                                              errorMessage =
-                                                  'The email address is invalid.';
-                                              break;
-                                            case 'user-not-found':
-                                              errorMessage =
-                                                  'The user associated with the email address is not found.';
-                                              break;
-                                            default:
-                                              errorMessage =
-                                                  'An error occurred while resetting the password.';
-                                          }
-                                        } else {
-                                          errorMessage =
-                                              'An error occurred while resetting the password.';
-                                        }
-
-                                        showToast(errorMessage);
-                                        Navigator.pop(context);
-                                      }
-                                    }),
-                                    child: TextBold(
-                                      text: 'Continue',
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }),
-                          );
-                        },
-                        child: TextRegular(
-                            text: 'Forgot Password?',
-                            fontSize: 12,
-                            color: Colors.black),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              ButtonWidget(
-                  label: readyLogin
-                      ? 'Login'
-                      : 'Please try again in $count1 seconds',
-                  onPressed: () {
-                    if (readyLogin) {
-                      login(context);
-                    }
-                  }),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextRegular(
-                      text: "Don't have an account?",
-                      fontSize: 12,
-                      color: Colors.black),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const SignupScreen()));
-                    },
-                    child: TextBold(
-                        text: "Signup", fontSize: 14, color: Colors.black),
-                  ),
-                ],
+              TextBold(
+                text: 'Selected user type',
+                fontSize: 14,
+                color: Colors.black,
               ),
               const SizedBox(
                 height: 10,
               ),
+              ButtonWidget(
+                color: primary,
+                radius: 100,
+                label: widget.type,
+                onPressed: () {},
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              TextBold(
+                text: 'Continue with Google',
+                fontSize: 18,
+                color: Colors.black,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              MaterialButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100)),
+                height: 50,
+                color: primary,
+                onPressed: () {
+                  googleLogin();
+                },
+                child: SizedBox(
+                  width: 260,
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'assets/images/googlelogo.png',
+                        height: 25,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(
+                        width: 55,
+                      ),
+                      TextBold(
+                          text: 'Login with Google',
+                          fontSize: 14,
+                          color: Colors.white),
+                    ],
+                  ),
+                ),
+              ),
+
               // TextButton(
               //   onPressed: () {
               //     showDialog(
@@ -281,39 +188,27 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  login(context) async {
-    if (loginCounter > 2) {
-      setState(() {
-        readyLogin = false;
-      });
-      showToast("Login attempt failed! Please try again in 20 seconds");
+  googleLogin() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
 
-      Timer.periodic(const Duration(seconds: 1), (timer) {
-        count++;
-        setState(() {
-          count1--;
-        });
-        if (count == 20) {
-          setState(() {
-            loginCounter = 0;
-            readyLogin = true;
-          });
-          timer.cancel();
-        }
-      });
-    } else {
-      try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: usernameController.text, password: passwordController.text);
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomeScreen()));
-      } on Exception catch (e) {
-        showToast("An error occurred: $e");
+    try {
+      final googleSignInAccount = await googleSignIn.signIn();
 
-        setState(() {
-          loginCounter++;
-        });
+      if (googleSignInAccount == null) {
+        return;
       }
+      final googleSignInAuth = await googleSignInAccount.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuth.accessToken,
+        idToken: googleSignInAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const AdminHome()));
+    } on FirebaseAuthException catch (e) {
+      print(e);
     }
   }
 }

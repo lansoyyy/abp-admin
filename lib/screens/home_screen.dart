@@ -1,4 +1,4 @@
-import 'package:app/screens/auth/login_screen.dart';
+import 'package:app/screens/landing_screen.dart';
 import 'package:app/screens/tabs/calendar_tab.dart';
 import 'package:app/screens/tabs/newsfeed_tab.dart';
 import 'package:app/screens/tabs/notif_tab.dart';
@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const LoginScreen()));
+                                          const LandingScreen()));
                             },
                             child: const Text(
                               'Continue',
