@@ -66,27 +66,33 @@ class AdminHome extends StatelessWidget {
               const SizedBox(
                 height: 15,
               ),
-              ButtonWidget(
-                radius: 100,
-                color: Colors.black,
-                label: 'Record payments',
-                onPressed: (() {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const PaymentsTab()));
-                }),
-              ),
+              box.read('type') == 'Senior Coordinator' ||
+                      box.read('type') == 'District Coordinator'
+                  ? ButtonWidget(
+                      radius: 100,
+                      color: Colors.black,
+                      label: 'Record payments',
+                      onPressed: (() {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const PaymentsTab()));
+                      }),
+                    )
+                  : const SizedBox(),
               const SizedBox(
                 height: 15,
               ),
-              ButtonWidget(
-                radius: 100,
-                color: Colors.black,
-                label: 'Attendance',
-                onPressed: (() {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const AttendanceTab()));
-                }),
-              ),
+              box.read('type') == 'Senior Coordinator' ||
+                      box.read('type') == 'District Coordinator'
+                  ? ButtonWidget(
+                      radius: 100,
+                      color: Colors.black,
+                      label: 'Attendance',
+                      onPressed: (() {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const AttendanceTab()));
+                      }),
+                    )
+                  : const SizedBox(),
               const SizedBox(
                 height: 15,
               ),
@@ -102,15 +108,17 @@ class AdminHome extends StatelessWidget {
               const SizedBox(
                 height: 15,
               ),
-              ButtonWidget(
-                radius: 100,
-                color: Colors.black,
-                label: 'Member profile',
-                onPressed: (() {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const ProfileTabAdmin()));
-                }),
-              ),
+              box.read('type') == 'Senior Coordinator'
+                  ? ButtonWidget(
+                      radius: 100,
+                      color: Colors.black,
+                      label: 'Member profile',
+                      onPressed: (() {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const ProfileTabAdmin()));
+                      }),
+                    )
+                  : const SizedBox()
             ],
           ),
         ),
