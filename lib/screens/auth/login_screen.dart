@@ -1,5 +1,8 @@
 import 'package:app/screens/admin/admin_home.dart';
+import 'package:app/services/add_admin.dart';
 import 'package:app/widgets/text_widget.dart';
+import 'package:app/widgets/toast_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -190,22 +193,63 @@ class _LoginScreenState extends State<LoginScreen> {
   googleLogin() async {
     final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
 
+    bool userExist = false;
+
     try {
       final googleSignInAccount = await googleSignIn.signIn();
 
-      if (googleSignInAccount == null) {
-        return;
-      }
-      final googleSignInAuth = await googleSignInAccount.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuth.accessToken,
-        idToken: googleSignInAuth.idToken,
-      );
+      await FirebaseFirestore.instance
+          .collection('Admins')
+          .get()
+          .then((QuerySnapshot querySnapshot) async {
+        for (var doc in querySnapshot.docs) {
+          if (doc['email'] == googleSignInAccount!.email) {
+            setState(() {
+              userExist = true;
+            });
+          }
+        }
+      }).whenComplete(() async {
+        if (userExist) {
+          final googleSignInAuth = await googleSignInAccount!.authentication;
+          final credential = GoogleAuthProvider.credential(
+            accessToken: googleSignInAuth.accessToken,
+            idToken: googleSignInAuth.idToken,
+          );
 
-      await FirebaseAuth.instance.signInWithCredential(credential);
+          await FirebaseAuth.instance.signInWithCredential(credential);
 
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => AdminHome()));
+          await FirebaseFirestore.instance
+              .collection('Admins')
+              .where('email', isEqualTo: googleSignInAccount.email)
+              .get()
+              .then((QuerySnapshot querySnapshot) async {
+            if (querySnapshot.docs[0]['type'] == widget.type) {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => AdminHome()));
+            } else {
+              showToast(
+                  'Invalid role type provided for that user! Please try again');
+            }
+          });
+        } else {
+          if (googleSignInAccount == null) {
+            return;
+          }
+          final googleSignInAuth = await googleSignInAccount.authentication;
+          final credential = GoogleAuthProvider.credential(
+            accessToken: googleSignInAuth.accessToken,
+            idToken: googleSignInAuth.idToken,
+          );
+
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+          addAdmin(googleSignInAccount.displayName, widget.type,
+              googleSignInAccount.email);
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => AdminHome()));
+        }
+      });
     } on FirebaseAuthException catch (e) {
       print(e);
     }
